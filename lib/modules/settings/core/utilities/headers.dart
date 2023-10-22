@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lunasea/core.dart';
 import 'package:lunasea/database/models/indexer.dart';
 import 'package:lunasea/modules/settings.dart';
+import 'package:lunasea/database/models/external_module.dart';
 
 class HeaderUtility {
   /// Show a dialog confirming the user wants to delete a header.
@@ -13,12 +14,14 @@ class HeaderUtility {
     required Map<String, String> headers,
     required String key,
     LunaIndexer? indexer,
+    LunaExternalModule? externalModule,
   }) async {
     bool result = await SettingsDialogs().deleteHeader(context);
     if (result) {
       headers.remove(key);
       LunaProfile.current.save();
       indexer?.save();
+      externalModule?.save();
       showLunaSuccessSnackBar(
         title: 'settings.HeaderDeleted'.tr(),
         message: key,
@@ -34,15 +37,16 @@ class HeaderUtility {
     BuildContext context, {
     required Map<String, String> headers,
     LunaIndexer? indexer,
+    LunaExternalModule? externalModule,
   }) async {
     final result = await SettingsDialogs().addHeader(context);
     if (result.item1)
       switch (result.item2) {
         case HeaderType.AUTHORIZATION:
-          await _basicAuthenticationHeader(context, headers, indexer);
+          await _basicAuthenticationHeader(context, headers, indexer, externalModule);
           break;
         case HeaderType.GENERIC:
-          await _genericHeader(context, headers, indexer);
+          await _genericHeader(context, headers, indexer, externalModule);
           break;
         default:
           LunaLogger().warning('Unknown case: ${result.item2}');
@@ -54,12 +58,14 @@ class HeaderUtility {
     BuildContext context,
     Map<String, String> headers,
     LunaIndexer? indexer,
+    LunaExternalModule? externalModule,
   ) async {
     final results = await SettingsDialogs().addCustomHeader(context);
     if (results.item1) {
       headers[results.item2] = results.item3;
       LunaProfile.current.save();
       indexer?.save();
+      externalModule?.save();
       showLunaSuccessSnackBar(
         title: 'settings.HeaderAdded'.tr(),
         message: results.item2,
@@ -72,6 +78,7 @@ class HeaderUtility {
     BuildContext context,
     Map<String, String> headers,
     LunaIndexer? indexer,
+    LunaExternalModule? externalModule,
   ) async {
     final results =
         await SettingsDialogs().addBasicAuthenticationHeader(context);
@@ -82,6 +89,7 @@ class HeaderUtility {
       headers['Authorization'] = 'Basic $_auth';
       LunaProfile.current.save();
       indexer?.save();
+      externalModule?.save();
       showLunaSuccessSnackBar(
         title: 'settings.HeaderAdded'.tr(),
         message: 'Authorization',

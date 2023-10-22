@@ -27,7 +27,7 @@ class _State extends State<ConfigurationSearchEditIndexerRoute>
     if (widget.id < 0 || !LunaBox.indexers.contains(widget.id)) {
       return InvalidRoutePage(
         title: 'search.EditIndexer'.tr(),
-        message: 'search.IndexerNotFound'.tr(),
+        message: 'search.IndexerNotFo2und'.tr(),
       );
     }
 

@@ -3,6 +3,7 @@ import 'package:lunasea/core.dart';
 import 'package:lunasea/database/models/external_module.dart';
 import 'package:lunasea/modules/settings.dart';
 import 'package:lunasea/widgets/pages/invalid_route.dart';
+import 'package:lunasea/router/routes/settings.dart';
 
 class ConfigurationExternalModulesEditRoute extends StatefulWidget {
   final int moduleId;
@@ -79,6 +80,7 @@ class _State extends State<ConfigurationExternalModulesEditRoute>
           children: [
             _displayNameTile(),
             _hostTile(),
+            _headers(),
           ],
         );
       },
@@ -124,6 +126,19 @@ class _State extends State<ConfigurationExternalModulesEditRoute>
         if (values.item1) _module!.host = values.item2;
         _module!.save();
       },
+    );
+  }
+
+  Widget _headers() {
+    return LunaBlock(
+      title: 'settings.CustomHeaders'.tr(),
+      body: [TextSpan(text: 'settings.CustomHeadersDescription'.tr())],
+      trailing: const LunaIconButton.arrow(),
+      onTap: () => SettingsRoutes.CONFIGURATION_EXTERNAL_MODULES_EDIT_HEADERS.go(
+        params: {
+          'id': widget.moduleId.toString(),
+        },
+      ),
     );
   }
 }

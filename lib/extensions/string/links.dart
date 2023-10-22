@@ -2,26 +2,36 @@ import 'package:lunasea/system/logger.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 extension StringAsLinksExtension on String {
-  Future<bool> _launchUniversal(String uri) async {
+  Future<bool> _launchUniversal(String uri,
+      {required Map<String, String> headers}) async {
     return await launchUrlString(
       uri,
       webOnlyWindowName: '_blank',
-      mode: LaunchMode.externalNonBrowserApplication,
+      mode: LaunchMode.inAppWebView,
+      webViewConfiguration: WebViewConfiguration(
+        headers: headers,
+      ),
     );
   }
 
-  Future<bool> _launchDefault(String uri) async {
+  Future<bool> _launchDefault(String uri,
+      {required Map<String, String> headers}) async {
     return await launchUrlString(
       uri,
       webOnlyWindowName: '_blank',
       mode: LaunchMode.platformDefault,
+      webViewConfiguration: WebViewConfiguration(
+        headers: headers,
+      ),
     );
   }
 
-  Future<void> openLink() async {
+  Future<void> openLink({
+    Map<String, String> headers = const <String, String>{},
+  }) async {
     try {
-      if (await _launchUniversal(this)) return;
-      await _launchDefault(this);
+      if (await _launchUniversal(this, headers: headers)) return;
+      await _launchDefault(this, headers: headers);
     } catch (error, stack) {
       LunaLogger().error(
         'Unable to open URL',

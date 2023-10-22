@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lunasea/database/models/external_module.dart';
 import 'package:lunasea/database/models/indexer.dart';
 import 'package:lunasea/modules.dart';
 import 'package:lunasea/modules/settings/routes/account/pages/password_reset.dart';
 import 'package:lunasea/modules/settings/routes/account/pages/settings.dart';
 import 'package:lunasea/modules/settings/routes/account/route.dart';
 import 'package:lunasea/modules/settings/routes/configuration/route.dart';
+import 'package:lunasea/modules/settings/routes/configuration_external_modules/pages.dart';
 import 'package:lunasea/modules/settings/routes/configuration_general/route.dart';
 import 'package:lunasea/modules/settings/routes/configuration_dashboard/pages/calendar_settings.dart';
 import 'package:lunasea/modules/settings/routes/configuration_dashboard/pages/default_pages.dart';
@@ -62,6 +64,8 @@ import 'package:lunasea/router/routes.dart';
 import 'package:lunasea/types/log_type.dart';
 import 'package:lunasea/vendor.dart';
 
+import 'package:lunasea/modules/settings/routes/configuration_external_modules/pages/add_module_headers.dart';
+
 enum SettingsRoutes with LunaRoutesMixin {
   HOME('/settings'),
   ACCOUNT('account'),
@@ -75,7 +79,9 @@ enum SettingsRoutes with LunaRoutesMixin {
   CONFIGURATION_DRAWER('drawer'),
   CONFIGURATION_EXTERNAL_MODULES('external_modules'),
   CONFIGURATION_EXTERNAL_MODULES_ADD('add'),
+  CONFIGURATION_EXTERNAL_MODULES_ADD_HEADERS('headers'),
   CONFIGURATION_EXTERNAL_MODULES_EDIT('edit/:id'),
+  CONFIGURATION_EXTERNAL_MODULES_EDIT_HEADERS('headers'),
   CONFIGURATION_LIDARR('lidarr'),
   CONFIGURATION_LIDARR_CONNECTION_DETAILS('connection_details'),
   CONFIGURATION_LIDARR_CONNECTION_DETAILS_HEADERS('headers'),
@@ -159,7 +165,19 @@ enum SettingsRoutes with LunaRoutesMixin {
         return route(widget: const ConfigurationExternalModulesRoute());
       case SettingsRoutes.CONFIGURATION_EXTERNAL_MODULES_ADD:
         return route(widget: const ConfigurationExternalModulesAddRoute());
+      case SettingsRoutes.CONFIGURATION_EXTERNAL_MODULES_ADD_HEADERS:
+        return route(builder: (_, state) {
+          final externalModule = state.extra as LunaExternalModule?;
+          return ConfigurationExternalModulesAddHeadersRoute(
+              externalModule: externalModule
+          );
+        });
       case SettingsRoutes.CONFIGURATION_EXTERNAL_MODULES_EDIT:
+        return route(builder: (_, state) {
+          final moduleId = int.tryParse(state.pathParameters['id']!) ?? -1;
+          return ConfigurationExternalModulesEditRoute(moduleId: moduleId);
+        });
+      case SettingsRoutes.CONFIGURATION_EXTERNAL_MODULES_EDIT_HEADERS:
         return route(builder: (_, state) {
           final moduleId = int.tryParse(state.pathParameters['id']!) ?? -1;
           return ConfigurationExternalModulesEditRoute(moduleId: moduleId);
@@ -326,6 +344,14 @@ enum SettingsRoutes with LunaRoutesMixin {
         return [
           SettingsRoutes.CONFIGURATION_DASHBOARD_CALENDAR.routes,
           SettingsRoutes.CONFIGURATION_DASHBOARD_DEFAULT_PAGES.routes,
+        ];
+      case SettingsRoutes.CONFIGURATION_EXTERNAL_MODULES_ADD:
+        return [
+          SettingsRoutes.CONFIGURATION_EXTERNAL_MODULES_ADD_HEADERS.routes,
+        ];
+      case SettingsRoutes.CONFIGURATION_EXTERNAL_MODULES_EDIT:
+        return [
+          SettingsRoutes.CONFIGURATION_EXTERNAL_MODULES_EDIT_HEADERS.routes,
         ];
       case SettingsRoutes.CONFIGURATION_LIDARR:
         return [

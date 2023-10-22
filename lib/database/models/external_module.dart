@@ -13,10 +13,27 @@ class LunaExternalModule extends HiveObject {
   @HiveField(1, defaultValue: '')
   String host;
 
-  LunaExternalModule({
-    this.displayName = '',
-    this.host = '',
+  @JsonKey()
+  @HiveField(2, defaultValue: <String, String>{})
+  Map<String, String> headers;
+
+  LunaExternalModule._internal({
+    required this.displayName,
+    required this.host,
+    required this.headers,
   });
+
+  factory LunaExternalModule({
+    String? displayName,
+    String? host,
+    Map<String, String>? headers,
+  }) {
+    return LunaExternalModule._internal(
+        displayName: displayName ?? '',
+        host: host ?? '',
+      headers: headers ?? {},
+    );
+  }
 
   @override
   String toString() => json.encode(this.toJson());

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lunasea/core.dart';
 import 'package:lunasea/database/models/external_module.dart';
 import 'package:lunasea/modules/settings.dart';
+import 'package:lunasea/router/routes/settings.dart';
 
 class ConfigurationExternalModulesAddRoute extends StatefulWidget {
   const ConfigurationExternalModulesAddRoute({
@@ -66,6 +67,7 @@ class _State extends State<ConfigurationExternalModulesAddRoute>
       children: [
         _displayNameTile(),
         _hostTile(),
+        _headers(),
       ],
     );
   }
@@ -107,6 +109,17 @@ class _State extends State<ConfigurationExternalModulesAddRoute>
         );
         if (values.item1) setState(() => _module.host = values.item2);
       },
+    );
+  }
+
+  Widget _headers() {
+    return LunaBlock(
+      title: 'settings.CustomHeaders'.tr(),
+      body: [TextSpan(text: 'settings.CustomHeadersDescription'.tr())],
+      trailing: const LunaIconButton.arrow(),
+      onTap: () => SettingsRoutes.CONFIGURATION_EXTERNAL_MODULES_ADD_HEADERS.go(
+        extra: _module
+      ),
     );
   }
 }

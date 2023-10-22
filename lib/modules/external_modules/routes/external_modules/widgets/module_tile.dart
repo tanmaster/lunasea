@@ -17,7 +17,7 @@ class ExternalModulesModuleTile extends StatelessWidget {
       title: module!.displayName,
       body: [TextSpan(text: module!.host)],
       trailing: const LunaIconButton.arrow(),
-      onTap: module!.host.openLink,
+      onTap: () => module!.host.openLink(headers: module!.headers),
     );
   }
 }
